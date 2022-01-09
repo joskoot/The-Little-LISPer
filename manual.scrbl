@@ -119,27 +119,27 @@ because it accepts everything else than a symbol or a non empty list as self-eva
 Same as in @(Rckt).}
 
 @elemtag{eq?}
-@defproc[(eq? (x atom?) (y atom?)) #,(nbpr "boolean?")]{
+@Defproc[(eq? (x atom?) (y atom?)) #,(nbpr "boolean?")]{
 Equivalence relation @nbpr{eq?} is restricted to atoms as required by the five laws of
 @nbhl["https://7chan.org/pr/src/__The_Little_LISPer___3rd_Edition.pdf"]{The Little LISPer}.}
 
 @elemtag{null?}
-@defproc[(null? (lst list?)) boolean]{
+@Defproc[(null? (lst list?)) boolean]{
 Restricted to lists as required by the five laws of
 @nbhl["https://7chan.org/pr/src/__The_Little_LISPer___3rd_Edition.pdf"]{The Little LISPer}.}
 
 @elemtag{cons}
-@defproc[(cons (kar any/c) (kdr list?)) list?]{
+@Defproc[(cons (kar any/c) (kdr list?)) list?]{
 Argument @nbr[kdr] must be a list as required by the five laws of
 @nbhl["https://7chan.org/pr/src/__The_Little_LISPer___3rd_Edition.pdf"]{The Little LISPer}.}
 
 @elemtag{car}
-@defproc[(car (lst (non-empty-listof any/c))) any/c]{
+@Defproc[(car (lst (non-empty-listof any/c))) any/c]{
 Restricted to proper lists as required by the five laws of
 @nbhl["https://7chan.org/pr/src/__The_Little_LISPer___3rd_Edition.pdf"]{The Little LISPer}.}
 
 @elemtag{cdr}
-@defproc[(cdr (lst (non-empty-listof any/c))) list?]{
+@Defproc[(cdr (lst (non-empty-listof any/c))) list?]{
 Restricted to proper lists as required by the five laws of
 @nbhl["https://7chan.org/pr/src/__The_Little_LISPer___3rd_Edition.pdf"]{The Little LISPer}.}
 
@@ -156,7 +156,7 @@ added, restricted or modified variants of @nbpr{lambda}, @nbpr{quote}, @nbpr{con
 and @nbpr{show}. These are described in section @seclink["restrictions"]{Restrictions}.
 Submodule @tt{value} exports procedure @nbr[value] and its @nbr[source-code].
 
-@defproc[(value (expr any/c)) any/c]{
+@Defproc[(value (expr any/c)) any/c]{
 Called from @[Rckt] procedure @nbr[value] receives the evaluated argument @nbr[expr].
 Procedure @nbr[value] evaluates the received value according to its own rules.}
 
@@ -172,7 +172,7 @@ which itself uses the less restricted predicate @nbpr{atom?}
 because it must recognize procedures as atoms too.}
 
 @elemtag{sexpr?}
-@defproc[(sexpr? (obj any/c)) #,(nbpr "boolean?")]{
+@Defproc[(sexpr? (obj any/c)) #,(nbpr "boolean?")]{
 Same as @nbr[(or (*atom? obj) (and (list? obj) (andmap sexpr? obj)))].}
 
 @section{Language accepted by interpreter.}
@@ -215,19 +215,19 @@ Same as in @(Rckt).}
 Same as in @nbpr{null?}.}
 
 @elemtag{add1}
-@defproc[(add1 (obj #,(nbpr "natural?"))) #,(nbpr "natural?")]{
+@Defproc[(add1 (obj #,(nbpr "natural?"))) #,(nbpr "natural?")]{
 Same as @nbr[(cons '() obj)].}
 
 @elemtag{sub1}
-@defproc[(sub1 (obj #,(nbpr "natural?"))) #,(nbpr "natural?")]{
+@Defproc[(sub1 (obj #,(nbpr "natural?"))) #,(nbpr "natural?")]{
 Same as @nbpr{cdr}.}
 
 @elemtag{list}
-@defproc[(list (obj any/c) ...) list?]{
+@Defproc[(list (obj any/c) ...) list?]{
 Same as in @(Rckt). This is the only primitive function with an @nbr[arity-at-least].}
 
 @elemtag{length}
-@defproc[(length (lst list?)) #,(nbpr "natural?")]{
+@Defproc[(length (lst list?)) #,(nbpr "natural?")]{
 Returns the @elemref["natural?"]{natural} of elements of @nbr[lst].
 Notice that numbers are represented by lists of empty lists.}
 
@@ -237,12 +237,12 @@ Notice that numbers are represented by lists of empty lists.}
 
 @elemtag{+}@elemtag{-}@elemtag{*}@elemtag{quotient}@elemtag{=}@elemtag{<}
 @deftogether[
-(@defproc[(+ (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "natural?")]
-@defproc[(- (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "natural?")]
-@defproc[(* (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "natural?")]
-@defproc[(quotient (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "natural?")]
-@defproc[(= (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "boolean?")]
-@defproc[(< (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "boolean?")])]{
+(@Defproc[(+ (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "natural?")]
+@Defproc[(- (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "natural?")]
+@Defproc[(* (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "natural?")]
+@Defproc[(quotient (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "natural?")]
+@Defproc[(= (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "boolean?")]
+@Defproc[(< (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "boolean?")])]{
 Work for natural numbers represented by lists of empty lists.
 Function @nbpr{-} returns zero if @nbr[(< n m)].}
 

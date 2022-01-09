@@ -8,13 +8,11 @@
   scribble/core
   scribble/eval
   scribble/racket
-  racket
-  racket/block
-  "interpreter.rkt"
+  (except-in racket natural?)
   (for-label "interpreter.rkt"
-              (except-in racket set) racket/block racket/function)
-  (for-template "interpreter.rkt" racket/function (except-in racket set))
-  (for-syntax racket/function (except-in racket set) racket/block))
+              (except-in racket set natural?) racket/block racket/function)
+  (for-template "interpreter.rkt" (except-in racket set natural?))
+  (for-syntax (except-in racket set natural?) racket/block))
 
 @(provide (all-defined-out))
 
@@ -54,6 +52,7 @@
 @(define-syntax-rule (do-not-ignore x ...) (begin x ...))
 @; Below syntaxes are used such as to allow keyword arguments
 @; without explicitly mentioning them in the definitions.
+@(define-syntax-rule (Defproc x ...) (defproc #:kind "function" x ...))
 @(define-syntax-rule (nbsl x ...) (nb (seclink    x ...)))
 @(define-syntax-rule (nbsr x ...) (nb (secref     x ...)))
 @(define-syntax-rule (nbhl x ...) (nb (hyperlink  x ...)))
