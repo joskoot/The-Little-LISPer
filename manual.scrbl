@@ -189,11 +189,11 @@ The top-level environment contains:
 @nbpr{quote}, @nbpr{cond} and @nbpr{show}}}
 
 @item{A list of empty lists represents a natural number and is self-evaluating.
-The numerical functions mentioned in the previous item work with this representation.
-Function @nbpr{-} returns @nbr[()], id est, zero, if otherwise the result would be negative.}
+Predicate @nbpr{natural?} and the numerical functions mentioned in the previous item work with this
+representation.}
  
-@item{A non-empty proper list (which is not a natural number)
-is evaluated by evaluating the first element,
+@item{Non-empty proper lists, natural numbers excepted,
+are evaluated by evaluating the first element,
 which is assumed to produce a macro or a function.
 Subsequently the macro or function is called.
 A functions takes care of the evaluation of its arguments.}
