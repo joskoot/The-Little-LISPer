@@ -78,9 +78,9 @@ in the required representation.}}
 
 The language implemented by function @nbr[value] is less restricted than that defined by
 @nbr[(submod "restrictions.rkt" restrictions)]. In fact the @nbr[source-code] is a
-@nbr[let*]-form. This enhances readability for the human eye.
-In @nbhl["restrictions.rkt"]{restrictions.rkt}, @nbr[let*] is redefined such as to expand to
-a nested @nbr[lambda]-form. Function @nbr[value] implements @nbr[let*] in the same way.
+@nbpr{let*}-form. This enhances readability for the human eye.
+In @nbhl["restrictions.rkt"]{restrictions.rkt}, @nbpr{let*} is redefined such as to expand to
+a nested @nbpr{lambda}-form. Function @nbr[value] implements @nbpr{let*} in the same way.
 
 @section[#:tag "restrictions"]{Restrictions on the source-code}
 
@@ -89,58 +89,70 @@ cover of @nbhl["https://7chan.org/pr/src/__The_Little_LISPer___3rd_Edition.pdf"]
 and allow a restricted set of primitives.
 The following restrictions apply to the @nbr[source-code].
 @itemlist[
-@item{The macros are @nbr[lambda], @nbr[quote], @nbr[cond] and @nbr[let*].@(lb)
+@item{The macros are @nbpr{lambda}, @nbpr{quote}, @nbpr{cond} and @nbpr{let*}.@(lb)
 They are restricted as described below.}
-@item{The functions are @nbr[atom?], @nbr[symbol?], @nbr[eq?], @nbr[null?], @nbr[cons], @nbr[car],
-@nbr[cdr] and @nbr[show].@(lb) Described below too.}]
+@item{The functions are @nbpr{atom?}, @nbpr{symbol?}, @nbpr{eq?}, @nbpr{null?}, @nbpr{cons},
+ @nbpr{car}, @nbpr{cdr} and @nbpr{show}.@(lb) Described below too.}]
 
+@elemtag{lambda}
 @defform-remove-empty-lines[@defmacro[(lambda (formal-arg ...+) body)
 #:grammar ((formal-arg symbol) (body sexpr))]{
 At least one @nbr[formal-arg] is required and
 the @nbr[body] is restricted to one @nbr[sexpr] only.
 @nb{No optional} nor keyword-arguments.}]
 
-@defform[(quote datum) #:grammar ((datum sexpr))]{As in @(Rckt) but the @nbr[datum]
-must be a @nbr[sexpr].}
+@elemtag{quote}
+@defmacro[(quote datum) #:grammar ((datum sexpr))]{As in @(Rckt) but the @nbr[datum]
+must be a @elemref["sexpr?"]{sexpr}.}
 
-@defform[(cond (test sexpr) ...+)]{
+@elemtag{cond}
+@defmacro[(cond (test sexpr) ...+)]{
 At least one @nbr[(test sexpr)] clause is required. Each @nbr[test] must yield a
-@nbrl[boolean?]{boolean}. This is tested at run-time up to and including the first @nbr[test]
-that yields @nbr[#t] (or does not yield a @nbrl[boolean?]{boolean}).}
+@elemref["boolean?"]{boolean}. This is tested at run-time up to and including the first @nbr[test]
+that yields @nbr[#t] (or does not yield a @elemref["boolean?"]{boolean}).}
 
-@defform[(let* ((var sexpr) ...+) body)]{
+@elemtag{let*}
+@defmacro[(let* ((var sexpr) ...+) body)]{
 The @nbr[body] is restricted to one @nbr[sexpr] only.
-@nbr[let*]-forms are not allowed in the @nbr[sexpr]s nor in the @nbr[body].
+@nbpr{let*}-forms are not allowed in the @nbr[sexpr]s nor in the @nbr[body].
 In fact the @nbr[source-code] has the form @nbr[(let* ((var sexpr) ...+) value)]
-without any nested @nbr[let*]-form.}
+without any nested @nbpr{let*}-form.}
 
+@elemtag{atom?}
 @@defproc[#:kind "predicate" (atom? (obj any/c)) boolean?]{
-Same as @nbr[(not (pair? x))]. The interpreter cannot use @nbr[*atom?],
+Same as @nbr[(not (pair? x))]. The interpreter cannot use @nbpr{*atom?},
 because it accepts everything else than a symbol or a non empty list as self-evaluating atoms too.}
 
+@elemtag{symbol?}
 @defproc[#:kind "predicate" (symbol? (obj any/c)) boolean?]{
 Same as in @(Rckt).}
 
+@elemtag{eq?}
 @defproc[(eq? (x atom?) (y atom?)) boolean?]{
-Equivalence relation @nbr[eq?] is restricted to atoms as required by the five laws of
+Equivalence relation @nbpr{eq?} is restricted to atoms as required by the five laws of
 @nbhl["https://7chan.org/pr/src/__The_Little_LISPer___3rd_Edition.pdf"]{The Little LISPer}.}
 
+@elemtag{null?}
 @defproc[(null? (lst list?)) boolean]{
 Restricted to lists as required by the five laws of
 @nbhl["https://7chan.org/pr/src/__The_Little_LISPer___3rd_Edition.pdf"]{The Little LISPer}.}
 
+@elemtag{cons}
 @defproc[(cons (kar any/c) (kdr list?)) list?]{
 Argument @nbr[kdr] must be a list as required by the five laws of
 @nbhl["https://7chan.org/pr/src/__The_Little_LISPer___3rd_Edition.pdf"]{The Little LISPer}.}
 
+@elemtag{car}
 @defproc[(car (lst (non-empty-listof any/c))) any/c]{
 Restricted to proper lists as required by the five laws of
 @nbhl["https://7chan.org/pr/src/__The_Little_LISPer___3rd_Edition.pdf"]{The Little LISPer}.}
 
+@elemtag{cdr}
 @defproc[(cdr (lst (non-empty-listof any/c))) list?]{
 Restricted to proper lists as required by the five laws of
 @nbhl["https://7chan.org/pr/src/__The_Little_LISPer___3rd_Edition.pdf"]{The Little LISPer}.}
 
+@elemtag{show}
 @defproc[(show (obj any/c)) any/c]{
 Returns the @nbr[obj] with the side effect of printing it.}
 
@@ -148,9 +160,9 @@ Returns the @nbr[obj] with the side effect of printing it.}
 The code of procedure @nbr[value] is in a submodule of the same name in file
 @nbhl["interpreter.rkt"]{interpreter.rkt}.
 which is restricted to what is provided by @nbr[(submod "restrictions.rkt" restrictions)], id est,
-added, restricted or modified variants of @nbr[lambda], @nbr[quote], @nbr[cond], @nbr[let*],
-@nbr[atom?], @nbr[symbol?], @nbr[eq?], @nbr[null?], @nbr[cons], @nbr[car], @nbr[cdr],
-and @nbr[show]. These are described in section @seclink["restrictions"]{Restrictions}.
+added, restricted or modified variants of @nbpr{lambda}, @nbpr{quote}, @nbpr{cond}, @nbpr{let*},
+@nbpr{atom?}, @nbpr{symbol?}, @nbpr{eq?}, @nbpr{null?}, @nbpr{cons}, @nbpr{car}, @nbpr{cdr},
+and @nbpr{show}. These are described in section @seclink["restrictions"]{Restrictions}.
 Submodule @tt{value} exports procedure @nbr[value] and its @nbr[source-code].
 
 @defproc[(value (expr any/c)) any/c]{
@@ -161,12 +173,14 @@ Procedure @nbr[value] evaluates the received value according to its own rules.}
 Source code of procedure @nbr[value] written according to the rules described in section
  @seclink["restrictions"]{Restrictions}.}
 
+@elemtag{*atom?}
 @defproc[#:kind "predicate" (*atom? (obj any/c)) boolean?]{
 Same as @nbr[(or (null? obj) (symbol? obj) (boolean? obj))].
 Used to check the restrictions on the @nbr[source-code],
-which itself uses the less restricted predicate @nbr[atom?]
+which itself uses the less restricted predicate @nbpr{atom?}
 because it must recognize procedures as atoms too.}
 
+@elemtag{sexpr?}
 @defproc[(sexpr? (obj any/c)) boolean?]{
 Same as @nbr[(or (*atom? obj) (and (list? obj) (andmap sexpr? obj)))].}
 
@@ -178,14 +192,14 @@ Function @nbr[value] evaluates its @tt{@italic{expr}} as follows:
 @item{A symbol is looked up in the current environment.
 The top-level environment contains: 
 
-@inset{@nbr[atom?], @nbr[symbol?], @nbr[boolean?], @nbr[zero?], @nbr[add1], @nbr[sub1], @nbr[eq?],
-@nbr[null?], @nbr[cons], @nbr[list], @nbr[length], @nbr[car], @nbr[cdr], @nbr[number?]
-@nbr[+], @nbr[-] @nbr[*], @nbr[=], @nbr[<], @nbr[quotient], @nbr[lambda], @nbr[let*], @nbr[quote],
-@nbr[cond] and @nbr[show]}}
+@inset{@nbpr{atom?}, @nbpr{symbol?}, @nbpr{boolean?}, @nbr[zero?], @nbr[add1], @nbr[sub1], @nbpr{eq?},
+@nbpr{null?}, @nbpr{cons}, @nbr[list], @nbr[length], @nbpr{car}, @nbpr{cdr}, @nbpr{number?}
+@nbpr{+}, @nbpr{-}, @nbpr{*}, @nbpr{=}, @nbpr{<}, @nbpr{quotient}, @nbpr{lambda}, @nbpr{let*}, @nbpr{quote},
+@nbpr{cond} and @nbpr{show}}}
 
 @item{A list of empty lists represents a natural number and is self-evaluating.
 The numerical functions mentioned in the previous item work with this representation.
-Function @nbr[-] returns @nbr[()], id est, zero, if otherwise the result would be negative.}
+Function @nbpr{-} returns @nbr[()], id est, zero, if otherwise the result would be negative.}
  
 @item{A non-empty proper list (which is not a number)
 is evaluated by evaluating the first element,
@@ -195,7 +209,53 @@ A functions takes care of the evaluation of its arguments.}
 
 @item{Everything else than a symbol or a proper list is self-evaluating.}]
 
-Examples:
+The following functions and macros already have been described: @nbpr{atom?}, @nbpr{symbol?},
+@nbpr{eq?}, @nbpr{null?}, @nbpr{cons},@nbpr{car}, @nbpr{cdr}, @nbpr{lambda}, @nbpr{let*},
+@nbpr{quote}, @nbpr{cond} and @nbpr{show}. Below we describe
+@nbpr{boolean?}, @nbr[zero?], @nbr[add1], @nbr[sub1],  @nbr[list], @nbr[length], @nbpr{number?}
+@nbpr{+}, @nbpr{-} @nbpr{*}, @nbpr{=}, @nbpr{<} and @nbpr{quotient}.
+
+@elemtag{boolean?}
+@defproc[#:kind "predicate" (boolean? (obj any/c)) boolean?]{
+Same as in @(Rckt).}
+
+@elemtag{zero?}
+@defproc[#:kind "predicate" (zero? (obj any/c)) boolean?]{
+Same as in @nbpr{null?}.}
+
+@elemtag{add1}
+@defproc[(add1 (obj number?)) number?]{
+Same as @nbr[(cons '() obj)].}
+
+@elemtag{sub1}
+@defproc[(sub1 (obj number?)) number?]{
+Same as @nbpr{cdr}.}
+
+@elemtag{list}
+@defproc[(list (obj any/c) ...) list?]{
+Same as in @(Rckt). This is the only primitive function with an @nbr[arity-at-least].}
+
+@elemtag{length}
+@defproc[(length (lst list?)) number?]{
+Returns the @elemref["number?"]{number} of elements of @nbr[lst].
+Notice that numbers are represented by lists of empty lists.}
+
+@elemtag{number?}
+@defproc[#:kind "predicate" (number? (obj any/c)) boolean?]{
+Notice that numbers are represented by lists of empty lists.}
+
+@elemtag{+}@elemtag{-}@elemtag{*}@elemtag{quotient}@elemtag{=}@elemtag{<}
+@deftogether[
+(@defproc[(+ (n number?) (m number?)) number?]
+@defproc[(- (n number?) (m number?)) number?]
+@defproc[(* (n number?) (m number?)) number?]
+@defproc[(quotient (n number?) (m number?)) number?]
+@defproc[(= (n number?) (m number?)) number?]
+@defproc[(< (n number?) (m number?)) number?])]{
+Work for numbers represented by lists of empty lists.
+Function @nbpr{-} returns zero if @nbr[(< n m)].}
+
+@section{Examples}
 
 @Interaction[
 (value '(add1 (()()())))
