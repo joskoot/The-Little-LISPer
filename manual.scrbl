@@ -1,26 +1,17 @@
 #lang scribble/manual
 
 @(require
-  racket
-  racket/function
-  scribble/core
+  (except-in racket natural?)
   "interpreter.rkt"
   "scribble-utensils.rkt"
-  racket/block
   (for-label
    "interpreter.rkt"
-   (except-in racket set)
-   racket/block
-   racket/function)
+   (except-in racket set natural?))
   (for-template
    "interpreter.rkt"
-   (except-in racket set)
-   racket/function
-   racket/block)
+   (except-in racket set natural?))
   (for-syntax
-   (except-in racket set)
-   racket/function
-   racket/block))
+   (except-in racket set natural?)))
 
 @title[#:version ""]{Meta-recursive interpreter@(lb)inspired by The Little LISPer}
 @author{Jacob J. A. Koot}
@@ -193,7 +184,7 @@ Function @nbr[value] evaluates its @tt{@italic{expr}} as follows:
 The top-level environment contains: 
 
 @inset{@nbpr{atom?}, @nbpr{symbol?}, @nbpr{boolean?}, @nbr[zero?], @nbr[add1], @nbr[sub1], @nbpr{eq?},
-@nbpr{null?}, @nbpr{cons}, @nbr[list], @nbr[length], @nbpr{car}, @nbpr{cdr}, @nbpr{number?}
+@nbpr{null?}, @nbpr{cons}, @nbr[list], @nbr[length], @nbpr{car}, @nbpr{cdr}, @nbpr{natural?}
 @nbpr{+}, @nbpr{-}, @nbpr{*}, @nbpr{=}, @nbpr{<}, @nbpr{quotient}, @nbpr{lambda}, @nbpr{let*},
 @nbpr{quote}, @nbpr{cond} and @nbpr{show}}}
 
@@ -201,7 +192,7 @@ The top-level environment contains:
 The numerical functions mentioned in the previous item work with this representation.
 Function @nbpr{-} returns @nbr[()], id est, zero, if otherwise the result would be negative.}
  
-@item{A non-empty proper list (which is not a number)
+@item{A non-empty proper list (which is not a natural number)
 is evaluated by evaluating the first element,
 which is assumed to produce a macro or a function.
 Subsequently the macro or function is called.
@@ -212,7 +203,7 @@ A functions takes care of the evaluation of its arguments.}
 The following functions and macros already have been described: @nbpr{atom?}, @nbpr{symbol?},
 @nbpr{eq?}, @nbpr{null?}, @nbpr{cons},@nbpr{car}, @nbpr{cdr}, @nbpr{lambda}, @nbpr{let*},
 @nbpr{quote}, @nbpr{cond} and @nbpr{show}. Below we describe
-@nbpr{boolean?}, @nbr[zero?], @nbr[add1], @nbr[sub1],  @nbr[list], @nbr[length], @nbpr{number?}
+@nbpr{boolean?}, @nbr[zero?], @nbr[add1], @nbr[sub1],  @nbr[list], @nbr[length], @nbpr{natural?}
 @nbpr{+}, @nbpr{-} @nbpr{*}, @nbpr{=}, @nbpr{<} and @nbpr{quotient}.
 
 @elemtag{boolean?}
@@ -224,11 +215,11 @@ Same as in @(Rckt).}
 Same as in @nbpr{null?}.}
 
 @elemtag{add1}
-@defproc[(add1 (obj number?)) number?]{
+@defproc[(add1 (obj #,(nbpr "natural?"))) #,(nbpr "natural?")]{
 Same as @nbr[(cons '() obj)].}
 
 @elemtag{sub1}
-@defproc[(sub1 (obj number?)) number?]{
+@defproc[(sub1 (obj #,(nbpr "natural?"))) #,(nbpr "natural?")]{
 Same as @nbpr{cdr}.}
 
 @elemtag{list}
@@ -236,23 +227,23 @@ Same as @nbpr{cdr}.}
 Same as in @(Rckt). This is the only primitive function with an @nbr[arity-at-least].}
 
 @elemtag{length}
-@defproc[(length (lst list?)) number?]{
-Returns the @elemref["number?"]{number} of elements of @nbr[lst].
+@defproc[(length (lst list?)) #,(nbpr "natural?")]{
+Returns the @elemref["natural?"]{natural} of elements of @nbr[lst].
 Notice that numbers are represented by lists of empty lists.}
 
-@elemtag{number?}
-@defproc[#:kind "predicate" (number? (obj any/c)) boolean?]{
+@elemtag{natural?}
+@defproc[#:kind "predicate" (natural? (obj any/c)) boolean?]{
 Notice that numbers are represented by lists of empty lists.}
 
 @elemtag{+}@elemtag{-}@elemtag{*}@elemtag{quotient}@elemtag{=}@elemtag{<}
 @deftogether[
-(@defproc[(+ (n number?) (m number?)) number?]
-@defproc[(- (n number?) (m number?)) number?]
-@defproc[(* (n number?) (m number?)) number?]
-@defproc[(quotient (n number?) (m number?)) number?]
-@defproc[(= (n number?) (m number?)) number?]
-@defproc[(< (n number?) (m number?)) number?])]{
-Work for numbers represented by lists of empty lists.
+(@defproc[(+ (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "natural?")]
+@defproc[(- (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "natural?")]
+@defproc[(* (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "natural?")]
+@defproc[(quotient (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "natural?")]
+@defproc[(= (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "boolean?")]
+@defproc[(< (n #,(nbpr "natural?")) (m #,(nbpr "natural?"))) #,(nbpr "boolean?")])]{
+Work for natural numbers represented by lists of empty lists.
 Function @nbpr{-} returns zero if @nbr[(< n m)].}
 
 @section{Examples}
