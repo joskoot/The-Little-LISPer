@@ -1,2 +1,2 @@
 # The-Little-LISPer
-meta-recursive interprtere a The Little LISPer
+A meta-recursive interpreter a The Little LISPer
