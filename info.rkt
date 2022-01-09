@@ -1,6 +1,4 @@
 #lang info
-
-; By Jacob J. A. Koot
-
-(define scribblings '(("manual.scrbl" ())))
-(define collection "The-Little-LISPer)
+(define name "The-Little-LISPer")
+(define scribblings '(("manual.scrbl")))
+(define collection "The-Little-LISPer")
