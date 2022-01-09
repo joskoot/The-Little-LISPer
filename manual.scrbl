@@ -25,8 +25,8 @@
 @title[#:version ""]{Meta-recursive interpreter@(lb)inspired by The Little LISPer}
 @author{Jacob J. A. Koot}
 
-@(defmodule The-Little-LISPer/interpreter #:packages ())
-@;@(defmodule "interpreter.rkt" #:packages ())
+@;@(defmodule The-Little-LISPer/interpreter #:packages ())
+@(defmodule "interpreter.rkt" #:packages ())
 
 @section{Introduction}
 The penultimate question and answer in
