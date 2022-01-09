@@ -224,7 +224,8 @@ Same as @nbpr{cdr}.}
 
 @elemtag{list}
 @Defproc[(list (obj any/c) ...) list?]{
-Same as in @(Rckt). This is the only primitive function with an @nbr[arity-at-least].}
+Same as in @(Rckt). This is the only primitive function with an @nbr[arity-at-least],
+but in the @nbr[source-code] it is made with functions of fixed arity only.}
 
 @elemtag{length}
 @Defproc[(length (lst list?)) #,(nbpr "natural?")]{
