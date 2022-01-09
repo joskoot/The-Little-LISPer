@@ -110,16 +110,16 @@ In fact the @nbr[source-code] has the form @nbr[(let* ((var sexpr) ...+) value)]
 without any nested @nbpr{let*}-form.}
 
 @elemtag{atom?}
-@@defproc[#:kind "predicate" (atom? (obj any/c)) boolean?]{
+@@defproc[#:kind "predicate" (atom? (obj any/c)) #,(nbpr "boolean?")]{
 Same as @nbr[(not (pair? x))]. The interpreter cannot use @nbpr{*atom?},
 because it accepts everything else than a symbol or a non empty list as self-evaluating atoms too.}
 
 @elemtag{symbol?}
-@defproc[#:kind "predicate" (symbol? (obj any/c)) boolean?]{
+@defproc[#:kind "predicate" (symbol? (obj any/c)) #,(nbpr "boolean?")]{
 Same as in @(Rckt).}
 
 @elemtag{eq?}
-@defproc[(eq? (x atom?) (y atom?)) boolean?]{
+@defproc[(eq? (x atom?) (y atom?)) #,(nbpr "boolean?")]{
 Equivalence relation @nbpr{eq?} is restricted to atoms as required by the five laws of
 @nbhl["https://7chan.org/pr/src/__The_Little_LISPer___3rd_Edition.pdf"]{The Little LISPer}.}
 
@@ -165,14 +165,14 @@ Source code of procedure @nbr[value] written according to the rules described in
  @seclink["restrictions"]{Restrictions}.}
 
 @elemtag{*atom?}
-@defproc[#:kind "predicate" (*atom? (obj any/c)) boolean?]{
+@defproc[#:kind "predicate" (*atom? (obj any/c)) #,(nbpr "boolean?")]{
 Same as @nbr[(or (null? obj) (symbol? obj) (boolean? obj))].
 Used to check the restrictions on the @nbr[source-code],
 which itself uses the less restricted predicate @nbpr{atom?}
 because it must recognize procedures as atoms too.}
 
 @elemtag{sexpr?}
-@defproc[(sexpr? (obj any/c)) boolean?]{
+@defproc[(sexpr? (obj any/c)) #,(nbpr "boolean?")]{
 Same as @nbr[(or (*atom? obj) (and (list? obj) (andmap sexpr? obj)))].}
 
 @section{Language accepted by interpreter.}
@@ -207,11 +207,11 @@ The following functions and macros already have been described: @nbpr{atom?}, @n
 @nbpr{+}, @nbpr{-} @nbpr{*}, @nbpr{=}, @nbpr{<} and @nbpr{quotient}.
 
 @elemtag{boolean?}
-@defproc[#:kind "predicate" (boolean? (obj any/c)) boolean?]{
+@defproc[#:kind "predicate" (boolean? (obj any/c)) #,(nbpr "boolean?")]{
 Same as in @(Rckt).}
 
 @elemtag{zero?}
-@defproc[#:kind "predicate" (zero? (obj any/c)) boolean?]{
+@defproc[#:kind "predicate" (zero? (obj any/c)) #,(nbpr "boolean?")]{
 Same as in @nbpr{null?}.}
 
 @elemtag{add1}
@@ -232,7 +232,7 @@ Returns the @elemref["natural?"]{natural} of elements of @nbr[lst].
 Notice that numbers are represented by lists of empty lists.}
 
 @elemtag{natural?}
-@defproc[#:kind "predicate" (natural? (obj any/c)) boolean?]{
+@defproc[#:kind "predicate" (natural? (obj any/c)) #,(nbpr "boolean?")]{
 Notice that numbers are represented by lists of empty lists.}
 
 @elemtag{+}@elemtag{-}@elemtag{*}@elemtag{quotient}@elemtag{=}@elemtag{<}
