@@ -194,8 +194,8 @@ The top-level environment contains:
 
 @inset{@nbpr{atom?}, @nbpr{symbol?}, @nbpr{boolean?}, @nbr[zero?], @nbr[add1], @nbr[sub1], @nbpr{eq?},
 @nbpr{null?}, @nbpr{cons}, @nbr[list], @nbr[length], @nbpr{car}, @nbpr{cdr}, @nbpr{number?}
-@nbpr{+}, @nbpr{-}, @nbpr{*}, @nbpr{=}, @nbpr{<}, @nbpr{quotient}, @nbpr{lambda}, @nbpr{let*}, @nbpr{quote},
-@nbpr{cond} and @nbpr{show}}}
+@nbpr{+}, @nbpr{-}, @nbpr{*}, @nbpr{=}, @nbpr{<}, @nbpr{quotient}, @nbpr{lambda}, @nbpr{let*},
+@nbpr{quote}, @nbpr{cond} and @nbpr{show}}}
 
 @item{A list of empty lists represents a natural number and is self-evaluating.
 The numerical functions mentioned in the previous item work with this representation.
@@ -261,7 +261,8 @@ Function @nbpr{-} returns zero if @nbr[(< n m)].}
 (value '(add1 (()()())))
 (value '((lambda (x) (x (x ()))) add1))]
 
-We'd better allow costumary natural numbers. Therefore we define:
+We'd better allow natural numbers in decimal positional notation.
+Therefore we define:
 
 @Interaction*[
 (define (trafo expr)
