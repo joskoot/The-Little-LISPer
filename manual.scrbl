@@ -196,9 +196,9 @@ representation.}
 are evaluated by evaluating the first element,
 which is assumed to produce a macro or a function.
 Subsequently the macro or function is called.
-A functions takes care of the evaluation of its arguments.}
+A function takes care of the evaluation of its arguments in the environment from which it is called.}
 
-@item{Everything else than a symbol or a proper list is self-evaluating.}]
+@item{Everything is self-evaluating.}]
 
 The following functions and macros already have been described: @nbpr{atom?}, @nbpr{symbol?},
 @nbpr{eq?}, @nbpr{null?}, @nbpr{cons},@nbpr{car}, @nbpr{cdr}, @nbpr{lambda}, @nbpr{let*},
