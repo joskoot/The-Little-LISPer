@@ -212,7 +212,7 @@ Same as in @(Rckt).}
 
 @elemtag{zero?}
 @defproc[#:kind "predicate" (zero? (obj any/c)) #,(nbpr "boolean?")]{
-Same as in @nbpr{null?}.}
+Same as @nbpr{null?}.}
 
 @elemtag{add1}
 @Defproc[(add1 (obj #,(nbpr "natural?"))) #,(nbpr "natural?")]{
