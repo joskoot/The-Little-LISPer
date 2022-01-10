@@ -16,8 +16,8 @@
 @title[#:version ""]{Meta-recursive interpreter@(lb)inspired by The Little LISPer}
 @author{Jacob J. A. Koot}
 
-@(defmodule The-Little-LISPer/interpreter #:packages ())
-@;@(defmodule "interpreter.rkt" #:packages ())
+@;@(defmodule The-Little-LISPer/interpreter #:packages ())
+@(defmodule "interpreter.rkt" #:packages ())
 
 @section{Introduction}
 The penultimate question and answer in
@@ -220,7 +220,7 @@ Same as @nbr[(cons '() obj)].}
 
 @elemtag{sub1}
 @Defproc[(sub1 (n #,(nbpr "natural?"))) #,(nbpr "natural?")]{
-Same as @nbpr{cdr}, but if @nbr[n] is zero (id est, @nbr[()]) is returned,
+Same as @nbpr{cdr}, but if @nbr[n] is zero, (id est @nbr[()]) is returned,
 as though @tt{0-1=0}.
 
 @Interaction[
@@ -341,15 +341,19 @@ it cannot be called from @(Rckt).
 @Interaction*[
 (|(value source-code)| 'whatever)]
 
-Yet the function can be used, but only from within the interpreter:
+Yet the function can be used, but only as source-code
+within the @elemref["sexpr?"]{sexpr} presented to the interpreter:
 
 @Interaction*[
-(value `(,|(value source-code)| '(list 'a 'b 'c)))]
+(time (code:comment "Meta-recursion.")
+ (*value
+ `(,source-code
+  '((lambda (x y) (x (y 5 4))) add1 *))))]
 
-We can even do a muliple level of meta-recursion:
+We can even do a multiple level of meta-recursion:
 
 @Interaction*[
-(time (code:comment "Two levels deep.")
+(time (code:comment "Meta-recursion, two levels deep.")
  (*value
  `(,source-code
   '(,source-code
