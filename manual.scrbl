@@ -35,14 +35,14 @@ by Danial P. Friedman and Matthias Felleisen
 
 Well, I do bother and therefore I'm giving it a shot in the form of two modules:
 
-@inset{@nbhl["interpreter.rkt"]{interpreter.rkt}@(lb)
-@nbhl["restrictions.rkt"]{restrictions.rkt}}
+@inset{@nbhl["../../interpreter.rkt"]{interpreter.rkt}@(lb)
+@nbhl["../../restrictions.rkt"]{restrictions.rkt}}
 
-Submodule @nbhl["restrictions.rkt"]{@nbr[(submod "restrictions.rkt" restrictions)]}
+Submodule @nbhl["../../restrictions.rkt"]{@nbr[(submod "restrictions.rkt" restrictions)]}
 defines a restricted language for the
-@nbr[source-code] in module @nbhl["interpreter.rkt"]{interpreter.rkt}.
+@nbr[source-code] in module @nbhl["../../interpreter.rkt"]{interpreter.rkt}.
 It also provides all primitives and macros that are used in the @nbr[source-code].
-Function @nbr[value] as provided by @nbhl["interpreter.rkt"]{interpreter.rkt}
+Function @nbr[value] as provided by @nbhl["../../interpreter.rkt"]{interpreter.rkt}
 is not a straight forward transformation of function @tt{value} of
 @nbhl["https://7chan.org/pr/src/__The_Little_LISPer___3rd_Edition.pdf"]{The little LISPer}.
 Functions and macros are represented by procedures of three arguments:
@@ -62,7 +62,7 @@ for the evaluation of the @nbr[exprs] and thereafter uses the values only.
 A macro has more freedom.
 Function @nbr[eval] reveives itself as argument when it is called by
 procedure @nbr[value].
-@nbhl["restrictions.rkt"]{@nbr[(submod "restrictions.rkt" restrictions)]}
+@nbhl["../../restrictions.rkt"]{@nbr[(submod "restrictions.rkt" restrictions)]}
 provides primitive functions for the @nbr[source-code].
 Within the latter they are wrapped such as to become @(nber "function/macro" "functions")
 in the required representation.}}
@@ -71,7 +71,7 @@ The language implemented by function @nbr[value] is restricted to @elemref["sexp
 but has a larger vocabulary for its top-environment than that defined by
 @racket[(submod "restrictions.rkt" restrictions)]. In fact the @nbr[source-code] is a
 @nbpr{let*}-form. This enhances readability for the human eye.
-In @nbhl["restrictions.rkt"]{restrictions.rkt}, @nbpr{let*} is redefined such as to expand to
+In @nbhl["../../restrictions.rkt"]{restrictions.rkt}, @nbpr{let*} is redefined such as to expand to
 a nested @nbpr{lambda}-form. Function @nbr[value] implements @nbpr{let*} in the same way.
 Because the expansion must result in a @elemref["sexpr?"]{sexpr},
 it is not fully hygienic.
@@ -152,7 +152,7 @@ Returns the @nbr[obj] with the side effect of printing it.}
 
 @section{The source-code}
 The code of procedure @nbr[value] is in a submodule of the same name in file
-@nbhl["interpreter.rkt"]{interpreter.rkt}.
+@nbhl["../../interpreter.rkt"]{interpreter.rkt}.
 which is restricted to what is provided by @nbr[(submod "restrictions.rkt" restrictions)], id est,
 added, restricted or modified variants of @nbpr{lambda}, @nbpr{quote}, @nbpr{cond}, @nbpr{let*},
 @nbpr{atom?}, @nbpr{symbol?}, @nbpr{eq?}, @nbpr{null?}, @nbpr{cons}, @nbpr{car}, @nbpr{cdr},
@@ -367,5 +367,7 @@ As conclusion a bogus example:
 '(monkey)               (code:comment "List of unevaluated arguments.")
  (lambda (x) x)         (code:comment "A phony environment.")
  (lambda (x y z) (y x)) (code:comment "A phony evaluator."))]
+
+More examples in file @hyperlink["../../examples.rkt"]{examples.rkt}.
 
 @bold{@larger{The end}}
