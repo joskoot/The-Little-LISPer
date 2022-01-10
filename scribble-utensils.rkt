@@ -142,6 +142,10 @@
   (make-element-id-transformer
    (lambda _ #'(tt "bits"))))
 
+@(define-syntax QUOTE
+  (make-element-id-transformer
+   (lambda _ #'(tt "quote"))))
+
 @; With thanks to Dupéron Georges
 @(define (defform-remove-empty-lines the-defform)
   (define 5blanks

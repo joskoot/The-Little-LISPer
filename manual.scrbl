@@ -16,8 +16,8 @@
 @title[#:version ""]{Meta-recursive interpreter@(lb)inspired by The Little LISPer}
 @author{Jacob J. A. Koot}
 
-@(defmodule The-Little-LISPer/interpreter #:packages ())
-@;@(defmodule "interpreter.rkt" #:packages ())
+@;@(defmodule The-Little-LISPer/interpreter #:packages ())
+@(defmodule "interpreter.rkt" #:packages ())
 
 @section{Introduction}
 The penultimate question and answer in
@@ -67,11 +67,19 @@ provides primitive functions for the @nbr[source-code].
 Within the latter they are wrapped such as to become @(nber "function/macro" "functions")
 in the required representation.}}
 
-The language implemented by function @nbr[value] is less restricted than that defined by
-@nbr[(submod "restrictions.rkt" restrictions)]. In fact the @nbr[source-code] is a
+The language implemented by function @nbr[value] is restricted to @elemref["sexpr?"]{sexprs} too,
+but has a larger vocabulary for its top-environment than that defined by
+@racket[(submod "restrictions.rkt" restrictions)]. In fact the @nbr[source-code] is a
 @nbpr{let*}-form. This enhances readability for the human eye.
 In @nbhl["restrictions.rkt"]{restrictions.rkt}, @nbpr{let*} is redefined such as to expand to
 a nested @nbpr{lambda}-form. Function @nbr[value] implements @nbpr{let*} in the same way.
+Because the expansion must result in a @elemref["sexpr?"]{sexpr},
+it is not fully hygienic.
+For this reason the expansion uses a very improbable symbol in stead of symbol @nbpr{lambda}:
+
+@Interaction[(value (quote ‹a·lambda·symbol·used·for·hygiene·in·macro·let*›))]
+
+Do not use this symbol in @elemref["sexpr?"]{sexprs} to be evaluated by procedure @nbr[value].
 
 @section[#:tag "restrictions"]{Restrictions on the source-code}
 
@@ -237,8 +245,11 @@ Notice that this number is represented by a list of empty lists.
 @elemtag{natural?}
 @defproc[#:kind "predicate" (natural? (obj any/c)) #,(nbpr "boolean?")]{
 Predicate for natural numbers. Such a number is represented by a list of empty lists.
+Natural numbers are self-evaluating. They don't need a quote.
 
 @Interaction[
+(value '(natural? (quote (()()()))))
+(code:comment "Natural numbers are self-evaluating. Therefore the quote can be omitted.")
 (value '(natural? (()()())))
 (value '(natural? (quote a)))]
 
