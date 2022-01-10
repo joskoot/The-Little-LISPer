@@ -346,7 +346,7 @@ within the @elemref["sexpr?"]{sexpr} presented to the interpreter.
 Macro @nbpr{quote} does not check the quoted datum to be a @elemref["sexpr?"]{sexpr}.
 
 @Interaction*[
-(value `((quote ,|(value source-code)|) '(add1 (()()()))))]
+(value `(',|(value source-code)| '(add1 (()()()))))]
 
 @Interaction*[
 (time (code:comment "Meta-recursion.")
