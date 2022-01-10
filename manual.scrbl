@@ -220,7 +220,7 @@ Same as @nbr[(cons '() obj)].}
 
 @elemtag{sub1}
 @Defproc[(sub1 (n #,(nbpr "natural?"))) #,(nbpr "natural?")]{
-Same as @nbpr{cdr}, but if @nbr[n] is zero, zero (id est @nbr[()]) is returned,
+Same as @nbpr{cdr}, but if @nbr[n] is zero (id est, @nbr[()]) is returned,
 as though @tt{0-1=0}.
 
 @Interaction[
