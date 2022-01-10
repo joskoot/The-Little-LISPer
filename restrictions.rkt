@@ -22,9 +22,8 @@ module provides macros, procedures and variables. Everything else than a non-emp
 Procedure |value| treats everything else than a symbol or a non-empty proper list an expr as self-
 evaluating. The source-code of the interpreter obeys predicate |sexpr?|.                            |#
 
-   (define (*atom? obj) (or (null? obj) (symbol? obj) #;(natural? obj) (boolean? obj)))
-   (define (atom? x) (not (pair? x)))
-   (define (sexpr? obj) (or (*atom? obj) (and (list? obj) (andmap sexpr? obj))))
+   (define (atom? obj) (or (null? obj) (symbol? obj) #;(natural? obj) (boolean? obj)))
+   (define (sexpr? obj) (or (atom? obj) (and (list? obj) (andmap sexpr? obj))))
    (require (only-in racket natural?))                                                              #|
 
 According to the five laws, predicate |null?| must be restricted to lists. Procedures |cons|, |car|
@@ -54,13 +53,10 @@ and the empty list, id est to atoms, but strings excluded.                      
     (unless (atom? atom1) (raise-argument-error 'eq? "atom?" atom1))
     (eq? atom0 atom1))                                                                              #|
 
-We export the capitalized predicated versions without capitalization. In the source-code procedure
-|expr?| is used once only in the central part of the evaluator. Some of the primitives have been
-commented out because tge interpetere does not need them. I represents numbers by lists of empty lists
-and defines its own procedures and predicates.                                                      |#
+We export the capitalized predicated versions without capitalization.                               |#
 
-   (provide atom? *atom? symbol? #;boolean? #;zero? #;add1 #;sub1 sexpr?)
-   (provide (rename-out (Eq? eq?) (Null? null?) (Cons cons) (Car car) (Cdr cdr) #;(natural? number?)))
+   (provide atom? symbol? #;boolean? #;zero? #;add1 #;sub1 sexpr?)
+   (provide (rename-out (Eq? eq?) (Null? null?) (Cons cons) (Car car) (Cdr cdr)))
 #|
 The macros are |lambda|, |quote| and |cond|, but we restrict their use to the style of The Little
 LISPer. A lambda-form must have at least one formal argument and its body cannot have more than one
@@ -137,6 +133,6 @@ That's it, almost. We must export some #% stuff. In addition we provide procedur
     (printf "~a~n" pr)
      x)
 
-   (provide show #%module-begin #%app #%datum)                                                   #|
+   (provide show #%module-begin #%app #%datum)                                                      #|
 
 End of submodule |# ) #|============================================================================|#

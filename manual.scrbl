@@ -16,8 +16,8 @@
 @title[#:version ""]{Meta-recursive interpreter@(lb)inspired by The Little LISPer}
 @author{Jacob J. A. Koot}
 
-@(defmodule The-Little-LISPer/interpreter #:packages ())
-@;@(defmodule "interpreter.rkt" #:packages ())
+@;@(defmodule The-Little-LISPer/interpreter #:packages ())
+@(defmodule "interpreter.rkt" #:packages ())
 
 @section{Introduction}
 The penultimate question and answer in
@@ -109,11 +109,6 @@ The @nbr[body] is restricted to one @nbr[sexpr] only.
 In fact the @nbr[source-code] has the form @nbr[(let* ((var sexpr) ...+) value)]
 without any nested @nbpr{let*}-form.}
 
-@elemtag{atom?}
-@@defproc[#:kind "predicate" (atom? (obj any/c)) #,(nbpr "boolean?")]{
-Same as @nbr[(not (pair? x))]. The interpreter cannot use @nbpr{*atom?},
-because it accepts everything else than a symbol or a non empty list as self-evaluating atoms too.}
-
 @elemtag{symbol?}
 @defproc[#:kind "predicate" (symbol? (obj any/c)) #,(nbpr "boolean?")]{
 Same as in @(Rckt).}
@@ -164,16 +159,13 @@ Procedure @nbr[value] evaluates the received value according to its own rules.}
 Source code of procedure @nbr[value] written according to the rules described in section
  @seclink["restrictions"]{Restrictions}.}
 
-@elemtag{*atom?}
-@defproc[#:kind "predicate" (*atom? (obj any/c)) #,(nbpr "boolean?")]{
-Same as @nbr[(or (null? obj) (symbol? obj) (boolean? obj))].
-Used to check the restrictions on the @nbr[source-code],
-which itself uses the less restricted predicate @nbpr{atom?}
-because it must recognize procedures as atoms too.}
+@elemtag{atom?}
+@defproc[#:kind "predicate" (atom? (obj any/c)) #,(nbpr "boolean?")]{
+Same as @nbr[(or (null? obj) (symbol? obj) (boolean? obj))].}
 
 @elemtag{sexpr?}
 @Defproc[(sexpr? (obj any/c)) #,(nbpr "boolean?")]{
-Same as @nbr[(or (*atom? obj) (and (list? obj) (andmap sexpr? obj)))].}
+Same as @nbr[(or (atom? obj) (and (list? obj) (andmap sexpr? obj)))].}
 
 @section{Language accepted by interpreter.}
 
@@ -219,8 +211,15 @@ Same as @nbpr{null?}.}
 Same as @nbr[(cons '() obj)].}
 
 @elemtag{sub1}
-@Defproc[(sub1 (obj #,(nbpr "natural?"))) #,(nbpr "natural?")]{
-Same as @nbpr{cdr}.}
+@Defproc[(sub1 (n #,(nbpr "natural?"))) #,(nbpr "natural?")]{
+Same as @nbpr{cdr}, but if @nbr[n] is zero, zero (id est @nbr[()]) is returned,
+as though @tt{0-1=0}.
+
+@Interaction[
+(value '(sub1 ()))
+(value '(sub1 (())))
+(value '(sub1 (()())))
+(value '(sub1 (()()())))]}
 
 @elemtag{list}
 @Defproc[(list (obj any/c) ...) list?]{
@@ -229,12 +228,31 @@ but in the @nbr[source-code] it is made with functions of fixed arity only.}
 
 @elemtag{length}
 @Defproc[(length (lst list?)) #,(nbpr "natural?")]{
-Returns the @elemref["natural?"]{natural} of elements of @nbr[lst].
-Notice that numbers are represented by lists of empty lists.}
+Returns the number of elements in @nbr[lst].
+Notice that this number is represented by a list of empty lists.
+
+@Interaction[
+(value '(length '(a b c)))]}
 
 @elemtag{natural?}
 @defproc[#:kind "predicate" (natural? (obj any/c)) #,(nbpr "boolean?")]{
-Notice that numbers are represented by lists of empty lists.}
+Predicate for natural numbers. Such a number is represented by a list of empty lists.
+
+@Interaction[
+(value '(natural? (()()())))
+(value '(natural? (quote a)))]
+
+The following yields an error:
+
+@Interaction[
+(value '(natural? 3))]
+
+The error is a consequence of the fact that 3 is not accepted as a @elemref["sexpr?"]{sexpr}.
+Admitted: the error message is confusing. It is a consequence of the fact that the interpreter
+assumes everything else than an @elemref["atom?"]{atom} to be a non-empty proper list.
+We also have:
+
+@Interaction[(value 3)]}
 
 @elemtag{+}@elemtag{-}@elemtag{*}@elemtag{quotient}@elemtag{=}@elemtag{<}
 @deftogether[
@@ -327,7 +345,7 @@ We can even do a muliple level of meta-recursion:
    '((lambda (x y) (x (y 5 4))) add1 *)))))]
 
 Well, that is not fast, as we could have expected beforehand.@(lb)
-To conclude a bogus example:
+As conclusion a bogus example:
 
 @Interaction*[
 ((value '(lambda (x) x))

@@ -31,10 +31,10 @@ Primitives included in the top-environment are wrapped such as to adhere to this
 Closures made by macro |lambda| have the same representation. Functions and closures are responsible
 for the evaluation of their arguments.
 
-Numbers are represented by lists of empty lists. The functions |zero?|, |add1|, |sub1|, |+|, |-|, |*|,
-|=|, |<| and |quotient| are made within submodule |value|. Everything else than a symbol or a
-non-empty proper list is self-evaluating. However, numbers, id est, lists of empty lists, are
-self-evaluating too.
+Natural numbers are represented by lists of empty lists. The functions |zero?|, |add1|, |sub1|, |+|,
+|-|, |*|, |=|, |<| and |quotient| are made within submodule |value|. Everything else than a symbol or
+a non-empty proper list is self-evaluating. However, natural numbers, id est, lists of empty lists,
+are self-evaluating too.
 
 The source-code is a let*-form. This enhances readability for the human eye. In "restriction.rkt"
 |let*| is redefined such as to expand to a nested lambda-form. In order to be meta-recursive, the
@@ -121,17 +121,22 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
     (zero? null?)
     (zero null)
     (add1 (lambda (x) (cons zero x)))
-    (sub1 cdr)
+    
+    (sub1
+     (lambda (n)
+      (cond
+       ((zero? n) zero)
+       (#t (cdr n)))))
 
-    (number?
+    (natural?
      (Y1
-      (lambda (number?)
+      (lambda (natural?)
        (lambda (x)
         (cond
          ((atom? x) (eq? x zero))
          ((atom? (car x))
           (cond
-           ((eq? (car x) zero) (number? (cdr x)))
+           ((eq? (car x) zero) (natural? (cdr x)))
            (#t #f)))
          (#t #f))))))
 
@@ -242,6 +247,10 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
          ((eval (caar clauses) env eval) (eval (cadar clauses) env eval))
          (#t (*cond (cdr clauses) env eval)))))))
 
+    (*lambda* (quote ‹a·lambda·symbol·used·for·hygiene·in·macro·let*›))
+
+    ; In the hope that the user never uses this symbol.
+
     (let*->lambda
      (Y2
       (lambda (let*->lambda)
@@ -250,7 +259,7 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
          ((null? bindings) body)
          (#t
           (build2
-           (build3 *lambda (wrap (caar bindings)) (let*->lambda (cdr bindings) body))
+           (build3 *lambda* (wrap (caar bindings)) (let*->lambda (cdr bindings) body))
            (cadar bindings))))))))
 
     (*let*
@@ -258,7 +267,8 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
       (eval (let*->lambda (car form) (cadr form)) env eval)))
 
     (top-vars
-     '(atom?
+     (quote
+      (atom?
        symbol?
        boolean?
        zero?
@@ -271,12 +281,13 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
        length
        car
        cdr
-       number? + - * = < quotient
+       natural? + - * = < quotient
        lambda
        let*
        quote
        cond
-       show))
+       show
+       ‹a·lambda·symbol·used·for·hygiene·in·macro·let*›)))
 
     (P1
      (lambda (primitive)
@@ -302,7 +313,7 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
      (cons (P1 length)
      (cons (P1 car)
      (cons (P1 cdr)
-     (cons (P1 number?)
+     (cons (P1 natural?)
      (cons (P2 +)
      (cons (P2 -)
      (cons (P2 *)
@@ -313,7 +324,8 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
      (cons *let*
      (cons *quote
      (cons *cond
-     (cons (P1 show) null))))))))))))))))))))))))))
+     (cons (P1 show)
+     (cons *lambda null)))))))))))))))))))))))))))
   
     (empty-env (lambda (sym) (build2 'not-bound sym)))
 
@@ -324,7 +336,7 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
       (cond
        ((symbol? expr) (env expr))
        ((atom? expr) expr)
-       ((number? expr) expr)
+       ((natural? expr) expr)
        (#t ((eval (car expr) env eval) (cdr expr) env eval)))))
 
     (value (lambda (expr) (eval expr top-env eval))))
@@ -333,14 +345,14 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
 
 (require 'value)
 
-(require (only-in (submod "restrictions.rkt" restrictions) atom? *atom? sexpr? show))
+(require (only-in (submod "restrictions.rkt" restrictions) atom? sexpr? show))
 
 ;====================================================================================================
 ; For the manual:
 
-(define atom?  (void))
-(define *atom?  (void))
-(define sexpr? (void))
-(define show   (void))
+(provide value source-code atom? sexpr? show)
 
-(provide value source-code atom? *atom? sexpr? show)
+;====================================================================================================
+; Check that the source-code is a sexpr.
+
+(unless (sexpr? source-code) (error 'source-code "Appears not to be a sexpr."))
