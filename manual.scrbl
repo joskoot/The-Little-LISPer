@@ -159,8 +159,8 @@ added, restricted or modified variants of @nbpr{lambda}, @nbpr{quote}, @nbpr{con
 and @nbpr{show}. These are described in section @seclink["restrictions"]{Restrictions}.
 Submodule @tt{value} exports procedure @nbr[value] and its @nbr[source-code].
 
-@Defproc[(value (expr any/c)) any/c]{
-Called from @[Rckt] procedure @nbr[value] receives the evaluated argument @nbr[expr].
+@Defproc[(value (sexpr sexpr?)) any/c]{
+Called from @[Rckt] procedure @nbr[value] receives the evaluated argument @nbr[sexpr].
 Procedure @nbr[value] evaluates the received value according to its own rules.}
 
 @defthing[source-code sexpr?]{
