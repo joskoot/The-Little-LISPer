@@ -356,12 +356,7 @@ it cannot be called from @(Rckt).
 @Interaction*[
 (|(value source-code)| 'whatever)]
 
-Yet the function can be used, but only when quoted or as source-code
-within the @elemref["sexpr?"]{sexpr} presented to the interpreter.
-Macro @nbpr{quote} does not check the quoted datum to be a @elemref["sexpr?"]{sexpr}.
-
-@Interaction*[
-(value `(',|(value source-code)| '(add1 (()()()))))]
+The following works:
 
 @Interaction*[
 (time (code:comment "Meta-recursion.")
