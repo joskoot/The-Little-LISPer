@@ -2,7 +2,8 @@
 
 (require "interpreter.rkt")
 
-(define (make-number n) (make-list n '()))
+(define (racket-nr->value-nr n) (make-list n '()))
+(define value-nr->racket-nr length)
 
 (define (make-fibonacci n)
 `(let*
@@ -16,30 +17,34 @@
        (cond
         ((zero? n) (cons first (cons second '())))
         (#t (cons first (fibo second (show (+ first second)) (sub1 n))))))))))
-  (fibo () (()) ,(make-number n))))
+  (fibo () (()) ,(racket-nr->value-nr n))))
 
 (printf "~nfirst 22 fibonacci numbers starting with 0 and 1:~n")
-(map length (time (value (make-fibonacci 20))))
+(map value-nr->racket-nr (time (value (make-fibonacci 20))))
 (printf "~nfirst 12 fibonacci numbers starting with 0 and 1 at meta-recursion level 1:~n")
-(map length (time (value `(,source-code ',(make-fibonacci 10)))))
+(map value-nr->racket-nr (time (value `(,source-code ',(make-fibonacci 10)))))
 (printf "~nfirst 7 fibonacci numbers starting with 0 and 1 at meta-recursion level 2:~n")
-(map length (time (value `(,source-code '(,source-code ',(make-fibonacci 5))))))
+(map value-nr->racket-nr (time (value `(,source-code '(,source-code ',(make-fibonacci 5))))))
 
 (printf "~nTesting the numerical functions:~n")
 
 (and
  (for*/and ((n (in-range 0 20)) (m (in-range 0 20)))
-  (= (length (value `(+ ,(make-list n '()) ,(make-list m '())))) (+ n m)))
+  (= (value-nr->racket-nr (value `(+ ,(racket-nr->value-nr n) ,(racket-nr->value-nr m))))
+   (+ n m)))
  (for*/and ((n (in-range 0 20)) (m (in-range 0 20)))
-  (= (length (value `(- ,(make-list n '()) ,(make-list m '())))) (max 0 (- n m))))
+  (= (value-nr->racket-nr (value `(- ,(racket-nr->value-nr n) ,(racket-nr->value-nr m))))
+   (max 0 (- n m))))
  (for*/and ((n (in-range 0 20)) (m (in-range 0 20)))
-  (= (length (value `(* ,(make-list n '()) ,(make-list m '())))) (* n m)))
+  (= (value-nr->racket-nr (value `(* ,(racket-nr->value-nr n) ,(racket-nr->value-nr m))))
+   (* n m)))
  (for*/and ((n (in-range 0 20)) (m (in-range 1 20)))
-  (= (length (value `(quotient ,(make-list n '()) ,(make-list m '())))) (quotient n m)))
+  (= (value-nr->racket-nr (value `(quotient ,(racket-nr->value-nr n) ,(racket-nr->value-nr m))))
+   (quotient n m)))
  (for*/and ((n (in-range 0 20)) (m (in-range 0 20)))
-  (eq? (value `(= ,(make-list n '()) ,(make-list m '()))) (= n m)))
+  (eq? (value `(= ,(racket-nr->value-nr n) ,(racket-nr->value-nr m))) (= n m)))
  (for*/and ((n (in-range 0 20)) (m (in-range 0 20)))
-  (eq? (value `(< ,(make-list n '()) ,(make-list m '()))) (< n m))))
+  (eq? (value `(< ,(racket-nr->value-nr n) ,(racket-nr->value-nr m))) (< n m))))
 
 (define (make-factorial n)
 `(let*
@@ -52,14 +57,14 @@
        (cond
         ((zero? (show n)) '(()))
         (#t (* n (factorial (sub1 n))))))))))
-  (factorial ,(make-number n))))
+  (factorial ,(racket-nr->value-nr n))))
 
 (printf "~n(factorial 8):~n")
-(length (time (value (make-factorial 8))))
+(value-nr->racket-nr (time (value (make-factorial 8))))
 (printf "~n(factorial 5) at meta-recursion level 1:~n")
-(length (time (value `(,source-code ',(make-factorial 5)))))
+(value-nr->racket-nr (time (value `(,source-code ',(make-factorial 5)))))
 (printf "~n(factorial 5) at meta-recursion level 2:~n")
-(length (time (value `(,source-code '(,source-code ',(make-factorial 5))))))
+(value-nr->racket-nr (time (value `(,source-code '(,source-code ',(make-factorial 5))))))
 
 (printf "~nNotice that (value source-code)) is not the same as value.~n~
          In interpreter |value| every procedure (and every macro included)~n~
@@ -71,7 +76,7 @@
   ((exn:fail?
     (λ (exn)
      (fprintf (current-error-port) "~a~n" (exn-message exn))
-     (printf "This exception has been catched~n~n"))))
+     (printf "This exception was expected and has been catched~n~n"))))
   (printf "~s~n" 'wrong)
   wrong))
 

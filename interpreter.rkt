@@ -118,6 +118,7 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
     (build2 (lambda (x y) (cons x (cons y null))))
     (build3 (lambda (x y z) (cons x (build2 y z))))
 
+    (true (lambda (x) #t))
     (zero? null?)
     (zero null)
     (add1 (lambda (x) (cons zero x)))
@@ -229,7 +230,15 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
          ((null? exprs) null)
          (#t (cons (eval (car exprs) env eval) (evallist (cdr exprs) env eval))))))))
 
-    (true (lambda (x) #t))
+    (sexpr?
+     (Y1
+      (lambda (sexpr)
+       (lambda (expr)
+        (cond
+         ((atom? expr) #t)
+         (#t
+          (cond
+           ((sexpr? (car expr)) (sexpr? (cdr expr))))))))))
 
     (*lambda
      (lambda (form env eval)
@@ -247,7 +256,7 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
          ((eval (caar clauses) env eval) (eval (cadar clauses) env eval))
          (#t (*cond (cdr clauses) env eval)))))))
 
-    (*lambda* (quote ‹a·lambda·symbol·used·for·hygiene·in·macro·let*›))
+    (*lambda-from-let* (quote ‹a·lambda·symbol·used·for·almost·hygiene·in·macro·let*›))
 
     ; In the hope that the user never uses this symbol.
 
@@ -259,35 +268,12 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
          ((null? bindings) body)
          (#t
           (build2
-           (build3 *lambda* (wrap (caar bindings)) (let*->lambda (cdr bindings) body))
+           (build3 *lambda-from-let* (wrap (caar bindings)) (let*->lambda (cdr bindings) body))
            (cadar bindings))))))))
 
     (*let*
      (lambda (form env eval)
       (eval (let*->lambda (car form) (cadr form)) env eval)))
-
-    (top-vars
-     (quote
-      (atom?
-       symbol?
-       boolean?
-       zero?
-       add1
-       sub1
-       eq?
-       null?
-       cons
-       list
-       length
-       car
-       cdr
-       natural? + - * = < quotient
-       lambda
-       let*
-       quote
-       cond
-       show
-       ‹a·lambda·symbol·used·for·hygiene·in·macro·let*›)))
 
     (P1
      (lambda (primitive)
@@ -299,20 +285,51 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
       (lambda (args env eval)
        (primitive (eval (car args) env eval) (eval (cadr args) env eval)))))
 
-    (top-vals
+    ; Always make sure to-vars and top-vals match.
+
+    (top-vars
+     (cons *lambda-from-let*
+      (quote
+       (lambda
+        cond
+        quote
+        cons
+        car
+        cdr
+        atom?
+        symbol?
+        sexpr?
+        boolean?
+        list
+        zero?
+        add1
+        sub1
+        eq?
+         null?
+        length
+        natural? + - * = < quotient
+        let*
+        show))))
+
+    (top-vals ; use cons, for we have no procedure |list| (yet).
+     (cons *lambda
+     (cons *lambda
+     (cons *cond
+     (cons *quote
+     (cons (P2 cons)
+     (cons (P1 car)
+     (cons (P1 cdr)
      (cons (P1 atom?)
      (cons (P1 symbol?)
+     (cons (P1 sexpr?)
      (cons (P1 boolean?)
+     (cons evallist
      (cons (P1 zero?)
      (cons (P1 add1)
      (cons (P1 sub1)
      (cons (P2 eq?)
      (cons (P1 null?)
-     (cons (P2 cons)
-     (cons evallist
      (cons (P1 length)
-     (cons (P1 car)
-     (cons (P1 cdr)
      (cons (P1 natural?)
      (cons (P2 +)
      (cons (P2 -)
@@ -320,12 +337,8 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
      (cons (P2 =)
      (cons (P2 <)
      (cons (P2 *quotient)
-     (cons *lambda
      (cons *let*
-     (cons *quote
-     (cons *cond
-     (cons (P1 show)
-     (cons *lambda null)))))))))))))))))))))))))))
+     (cons (P1 show) null))))))))))))))))))))))))))))
   
     (empty-env (lambda (sym) (build2 'not-bound sym)))
 
@@ -339,18 +352,21 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
        ((natural? expr) expr)
        (#t ((eval (car expr) env eval) (cdr expr) env eval)))))
 
-    (value (lambda (expr) (eval expr top-env eval))))
+    (value
+     (lambda (expr)
+      (cond
+       ((sexpr? expr) (eval expr top-env eval))))))
 
    value)))
 
 (require 'value)
-
-(require (only-in (submod "restrictions.rkt" restrictions) atom? sexpr? show))
+(provide value source-code)
 
 ;====================================================================================================
 ; For the manual:
 
-(provide value source-code atom? sexpr? show)
+(require (only-in (submod "restrictions.rkt" restrictions) atom? sexpr? show))
+(provide atom? sexpr? show)
 
 ;====================================================================================================
 ; Check that the source-code is a sexpr.
