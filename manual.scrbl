@@ -16,8 +16,7 @@
 @title[#:version ""]{Meta-recursive interpreter@(lb)inspired by The Little LISPer}
 @author{Jacob J. A. Koot}
 
-@(defmodule The-Little-LISPer/interpreter #:packages ())
-@;@(defmodule "interpreter.rkt" #:packages ())
+@(Defmodule)
 
 @section{Introduction}
 The penultimate question and answer in
@@ -35,14 +34,14 @@ by Danial P. Friedman and Matthias Felleisen
 
 Well, I do bother and therefore I'm giving it a shot in the form of two modules:
 
-@inset{@nbhl["../../interpreter.rkt"]{interpreter.rkt}@(lb)
-@nbhl["../../restrictions.rkt"]{restrictions.rkt}}
+@inset{@nbhll["interpreter.rkt"]{interpreter.rkt}@(lb)
+@nbhll["restrictions.rkt"]{restrictions.rkt}}
 
-Submodule @nbhl["../../restrictions.rkt"]{@nbr[(submod "restrictions.rkt" restrictions)]}
+Submodule @nbhll["restrictions.rkt"]{@nbr[(submod "restrictions.rkt" restrictions)]}
 defines a restricted language for the
-@nbr[source-code] in module @nbhl["../../interpreter.rkt"]{interpreter.rkt}.
+@nbr[source-code] in module @nbhll["interpreter.rkt"]{interpreter.rkt}.
 It provides all primitives and macros for the @nbr[source-code].
-@nbhl["../../interpreter.rkt"]{interpreter.rkt} provides procedure @nbr[value] and
+@nbhll["interpreter.rkt"]{interpreter.rkt} provides procedure @nbr[value] and
 its @nbr[source-code].
 
 @Defproc[(value (sexpr sexpr?)) any/c]{
@@ -143,7 +142,7 @@ A @elemref["natural?"]{natural number} is printed in normal notation (decimal po
 
 @section{The source-code}
 The @nbr[source-code] of procedure @nbr[value] is in a submodule of the same name in file
-@nbhl["../../interpreter.rkt"]{interpreter.rkt}.
+@nbhll["interpreter.rkt"]{interpreter.rkt}.
 The code is restricted to what is provided by
 
 @inset{@nbr[(submod "restrictions.rkt" restrictions)]}
@@ -152,7 +151,7 @@ The @nbr[source-code] is restricted to modified variants of
 @nbpr{lambda}, @nbpr{quote}, @nbpr{cond}, @nbpr{let*}, @nbpr{atom?}, @nbpr{symbol?}, @nbpr{eq?},
 @nbpr{null?}, @nbpr{cons}, @nbpr{car} and @nbpr{cdr} and addition of procedure @nbpr{show}.
 These macros and procedures are described in section @seclink["restrictions"]{Restrictions}.
-Function @nbr[value] as provided by @nbhl["../../interpreter.rkt"]{interpreter.rkt}
+Function @nbr[value] as provided by @nbhll["interpreter.rkt"]{interpreter.rkt}
 is not a straight forward transformation of function @tt{value} of
 @nbhl["https://7chan.org/pr/src/__The_Little_LISPer___3rd_Edition.pdf"]{The little LISPer}.
 Functions and macros are represented by procedures of three arguments:
@@ -171,7 +170,7 @@ for the evaluation of the @nbr[exprs] and thereafter uses the values only.
 A macro has more freedom.
 Function @nbr[eval] reveives itself as argument when it is called by
 procedure @nbr[value].
-@nbhl["../../restrictions.rkt"]{@nbr[(submod "restrictions.rkt" restrictions)]}
+@nbhll["restrictions.rkt"]{@nbr[(submod "restrictions.rkt" restrictions)]}
 provides primitive functions for the @nbr[source-code].
 Within the latter they are wrapped such as to become @(nber "function/macro" "functions")
 in the required representation.}}
@@ -281,7 +280,7 @@ The language implemented by function @nbr[value] is restricted to @elemref["sexp
 but has a larger vocabulary for its top-environment than that defined by
 @racket[(submod "restrictions.rkt" restrictions)]. In fact the @nbr[source-code] is a
 @nbpr{let*}-form. This enhances readability for the human eye.
-In @nbhl["../../restrictions.rkt"]{restrictions.rkt}, @nbpr{let*} is redefined such as to expand to
+In @nbhll["restrictions.rkt"]{restrictions.rkt}, @nbpr{let*} is redefined such as to expand to
 a nested @nbpr{lambda}-form. Function @nbr[value] implements @nbpr{let*} in the same way.
 Because the expansion must result in a @elemref["sexpr?"]{sexpr},
 it is not fully hygienic.

@@ -5,6 +5,7 @@
 @;====================================================================================================
 
 @(require
+  racket
   scribble/core
   scribble/eval
   scribble/racket
@@ -13,6 +14,8 @@
               (except-in racket set natural?) racket/block racket/function)
   (for-template "interpreter.rkt" (except-in racket set natural?))
   (for-syntax (except-in racket set natural?) racket/block))
+
+@(define-for-syntax local #f)
 
 @(provide (all-defined-out))
 
@@ -56,6 +59,18 @@
 @(define-syntax-rule (nbsl x ...) (nb (seclink    x ...)))
 @(define-syntax-rule (nbsr x ...) (nb (secref     x ...)))
 @(define-syntax-rule (nbhl x ...) (nb (hyperlink  x ...)))
+
+@(define-syntax (nbhll stx)
+  (syntax-case stx ()
+   ((_ x y ...)
+    (if local
+   #'(nb (hyperlink x y ...))
+   #'(nb (hyperlink (string-append "../../" x) y ...))))))
+
+@(define-syntax (Defmodule stx)
+  (if local #'(defmodule "interpreter.rkt" #:packages ())
+            #'(defmodule The-Little-LISPer/interpreter #:packages ())))
+
 @(define-syntax-rule (nber x ...) (nb (elemref    x ...)))
 @(define-syntax-rule (nbrl x ...) (nb (racketlink x ...)))
 @(define-syntax-rule (nbr  x ...) (nb (racket     x ...)))
@@ -102,49 +117,6 @@
 @(define opt-proc "optional, default: ")
 
 @(define (Rckt) (nbhl "https://racket-lang.org/" "Racket"))
-
-@(define (keyword . x)
-  (apply seclink "keywords" #:doc '(lib "scribblings/reference/reference.scrbl") x))
-
-@(define-syntax SET
-  (make-element-id-transformer
-   (lambda _ #'(tt "set"))))
-
-@(define-syntax RESET
-  (make-element-id-transformer
-   (lambda _ #'(tt "reset"))))
-
-@(define-syntax FIRST
-  (make-element-id-transformer
-   (lambda _ #'(tt "first"))))
-
-@(define-syntax SECOND
-  (make-element-id-transformer
-   (lambda _ #'(tt "second"))))
-
-@(define-syntax ELSE
-  (make-element-id-transformer
-   (lambda _ #'(tt "else"))))
-
-@(define-syntax VALUES
-  (make-element-id-transformer
-   (lambda _ #'(tt "values"))))
-
-@(define-syntax TIME
-  (make-element-id-transformer
-   (lambda _ #'(tt "time"))))
-
-@(define-syntax DELAY
-  (make-element-id-transformer
-   (lambda _ #'(tt "delay"))))
-
-@(define-syntax BITS
-  (make-element-id-transformer
-   (lambda _ #'(tt "bits"))))
-
-@(define-syntax QUOTE
-  (make-element-id-transformer
-   (lambda _ #'(tt "quote"))))
 
 @; With thanks to Dupéron Georges
 @(define (defform-remove-empty-lines the-defform)
