@@ -65,7 +65,7 @@
 
 @(define-syntax (Defmodule stx)
   (if local? #'(defmodule "interpreter.rkt" #:packages ())
-             #'(defmodule another-tll/interpreter #:packages ())))
+             #'(defmodule tll/interpreter #:packages ())))
 
 @(define (tll)
  @nbhl["https://7chan.org/pr/src/__The_Little_LISPer___3rd_Edition.pdf"]{The Little LISPer})
