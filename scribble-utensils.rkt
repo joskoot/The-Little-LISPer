@@ -10,12 +10,10 @@
   scribble/eval
   scribble/racket
   (except-in racket natural?)
-  (for-label "interpreter.rkt"
-              (except-in racket set natural?) racket/block racket/function)
-  (for-template "interpreter.rkt" (except-in racket set natural?))
-  (for-syntax (except-in racket set natural?) racket/block))
+  (for-label "interpreter.rkt")
+  (for-template "interpreter.rkt"))
 
-@(define-for-syntax local #f)
+@(define-for-syntax local? #t)
 
 @(provide (all-defined-out))
 
@@ -23,8 +21,7 @@
   (interaction #:eval
    (make-base-eval
     #:lang '(begin
-             (require racket "interpreter.rkt" racket/block
-                      (for-syntax racket racket/block))
+             (require racket "interpreter.rkt")
              (print-as-expression #f))) x ...))
 
 @(define-syntax-rule (Interaction* x ...)
@@ -33,8 +30,7 @@
 @(define (make-evaller)
   (make-base-eval
    #:lang '(begin
-            (require racket "interpreter.rkt" racket/block
-                     (for-syntax racket racket/block))
+            (require racket "interpreter.rkt" )
             (print-as-expression #f))))
 
 @(define evaller (make-evaller))
@@ -63,13 +59,16 @@
 @(define-syntax (nbhll stx)
   (syntax-case stx ()
    ((_ x y ...)
-    (if local
+    (if local?
    #'(nb (hyperlink x y ...))
    #'(nb (hyperlink (string-append "../../" x) y ...))))))
 
 @(define-syntax (Defmodule stx)
-  (if local #'(defmodule "interpreter.rkt" #:packages ())
-            #'(defmodule The-Little-LISPer/interpreter #:packages ())))
+  (if local? #'(defmodule "interpreter.rkt" #:packages ())
+             #'(defmodule another-tll/interpreter #:packages ())))
+
+@(define (tll)
+ @nbhl["https://7chan.org/pr/src/__The_Little_LISPer___3rd_Edition.pdf"]{The Little LISPer})
 
 @(define-syntax-rule (nber x ...) (nb (elemref    x ...)))
 @(define-syntax-rule (nbrl x ...) (nb (racketlink x ...)))
@@ -79,7 +78,7 @@
 @(define-syntax-rule (defmacro* x ...) (defform* #:kind "macro" x ...))
 @(define (tt . content) (element 'tt (apply list content)))
 @(define(minus) (tt "-"))
-@(define(-?) (element "roman" ?-))
+@(define (-?) (element "roman" ?-))
 @(define (note . x) (inset (apply smaller x)))
 @(define (inset . x) (apply nested #:style 'inset x))
 @(define (expt-1) @↑{@(minus)1})
