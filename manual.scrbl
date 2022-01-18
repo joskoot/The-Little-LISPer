@@ -13,7 +13,7 @@
   (for-syntax
    (except-in racket set natural?)))
 
-@title[#:version ""]{Meta-recursive interpreter@(lb)inspired by The Little LISPer}
+@title[#:version ""]{Meta-recursive interpreter@(lb)inspired by TLL}
 @author{Jacob J. A. Koot}
 
 @(Defmodule)
