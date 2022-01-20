@@ -256,7 +256,7 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
          ((eval (caar clauses) env eval) (eval (cadar clauses) env eval))
          (#t (*cond (cdr clauses) env eval)))))))
 
-    (*lambda-from-let* (quote ‹a·lambda·symbol·used·for·almost·hygiene·in·macro·let*›))
+    (*lambda-from-let* '‘‹a·lambda·symbol·used·for·almost·hygiene·in·macro·let*›’)
 
     ; In the hope that the user never uses this symbol.
 
@@ -285,31 +285,30 @@ is clicked, macro |define-and-provide-quoted-and-evaluated| is used. This macro 
       (lambda (args env eval)
        (primitive (eval (car args) env eval) (eval (cadr args) env eval)))))
 
-    ; Always make sure to-vars and top-vals match.
+    ; Always make sure that to-vars and top-vals match each other.
 
     (top-vars
      (cons *lambda-from-let*
-      (quote
-       (lambda
-        cond
-        quote
-        cons
-        car
-        cdr
-        atom?
-        symbol?
-        sexpr?
-        boolean?
-        list
-        zero?
-        add1
-        sub1
-        eq?
-         null?
-        length
-        natural? + - * = < quotient
-        let*
-        show))))
+     '(lambda
+       cond
+       quote
+       cons
+       car
+       cdr
+       atom?
+       symbol?
+       sexpr?
+       boolean?
+       list
+       zero?
+       add1
+       sub1
+       eq?
+       null?
+       length
+       natural? + - * = < quotient
+       let*
+       show)))
 
     (top-vals ; use cons, for we have no procedure |list| (yet).
      (cons *lambda

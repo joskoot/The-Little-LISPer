@@ -70,7 +70,7 @@ addition every test is required to yield a boolean.                             
 
    (define-syntax-rule
     (Lambda (var0 var ...) expr)
-    (procedure-rename (lambda (var0 var ...) expr) 'no-name))
+    (lambda (var0 var ...) expr))
 
    (define-syntax (Cond stx)
     (syntax-case stx ()

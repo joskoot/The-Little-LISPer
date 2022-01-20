@@ -13,7 +13,7 @@
   (for-syntax
    (except-in racket set natural?)))
 
-@title[#:version ""]{Meta-recursive interpreter@(lb)inspired by TLL}
+@title[#:version ""]{Meta-recursive interpreter@(lb)inspired by The Little LISPer}
 @author{Jacob J. A. Koot}
 
 @(Defmodule)
@@ -168,7 +168,7 @@ The @nbr[exprs] are the unevaluated arguments.
 A function always uses @nbr[env] and @nbr[eval]
 for the evaluation of the @nbr[exprs] and thereafter uses the values only.
 A macro has more freedom.
-Function @nbr[eval] reveives itself as argument when it is called by
+Function @nbr[eval] receives itself as argument when it is called by
 procedure @nbr[value].
 @nbhll["restrictions.rkt"]{@nbr[(submod "restrictions.rkt" restrictions)]}
 provides primitive functions for the @nbr[source-code].
