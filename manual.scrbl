@@ -19,9 +19,7 @@
 @(Defmodule)
 
 @section{Introduction}
-The penultimate question and answer in
-#;@nbhl["https://7chan.org/pr/src/__The_Little_LISPer___3rd_Edition.pdf"]{The Little LISPer}
-The Little LISPer
+The penultimate question and answer in The Little LISPer
 by Danial P. Friedman and Matthias Felleisen
 @nb{(1989, ISBN 0-574-24005-5)} read:
 
